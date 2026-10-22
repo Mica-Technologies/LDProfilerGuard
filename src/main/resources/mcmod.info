@@ -1,0 +1,13 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "${modname}",
+    "description": "Stops the vanilla Profiler crash (ArrayIndexOutOfBoundsException: -1 in endSection) caused by unbalanced or off-thread profiler calls. Server and client; clients without it can still join.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "credits": "Mica Technologies",
+    "authorList": ["Mica Technologies"],
+    "dependencies": ["mixinbooter"],
+    "useDependencyInformation": "true"
+  }
+]

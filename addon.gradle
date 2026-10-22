@@ -1,0 +1,28 @@
+// Print tasks the release workflow reads with `gradlew -q printX | tail -n 1`.
+// Append to addon.gradle (RFG / GregTechCEu buildscript). Do not put them in build.gradle:
+// that file is the upstream buildscript verbatim and `updateBuildScript` overwrites it.
+
+// TOOLS FOR GITHUB ACTIONS
+task printModVersion {
+    doLast {
+        println project.version
+    }
+}
+
+task printArchivesBaseName {
+    doLast {
+        println project.findProperty('archivesBaseName')
+    }
+}
+
+task printModName {
+    doLast {
+        println project.findProperty('modName')
+    }
+}
+
+task printMinecraftVersion {
+    doLast {
+        println project.findProperty('minecraftVersion')
+    }
+}

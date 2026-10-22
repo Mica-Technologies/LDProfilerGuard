@@ -1,0 +1,45 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# Compiled artifacts
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# Minecraft modding (Forge/Fabric dev environment)
+run/
+logs/
+crash-reports/
+
+# OS cruft
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Logs and temp
+*.log
+*.tmp
+*~
+
+# Secrets
+*.env
+.env.*
+*credentials*
+
+# Local-only Claude Code state
+.claude/settings.local.json
+
+# Output of .github/scripts/server-smoke-test.sh when run locally (Minecraft mod repos).
+server-smoke.log
+server-smoke.log
