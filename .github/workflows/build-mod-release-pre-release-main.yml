@@ -1,9 +1,9 @@
-# Mica Technologies standard mod release workflow — canonical copy from dev-configurations
-# (minecraft-mod-workflows/template/). Every push to main publishes a pre-release; a manual
-# dispatch with release=true publishes a full release. Both are date-versioned.
+# Mica Technologies standard mod release workflow. Every push to main publishes a pre-release; a
+# manual dispatch with release=true publishes a full release. Both are date-versioned.
+#
 #
 # Lines marked `# ADAPT:` are the only ones a repo is expected to change. Everything else is
-# kept verbatim across the fleet so a repo stays diffable against this file. If a repo needs a
+# kept verbatim across Mica Technologies mods so a repo stays diffable against this file. If a repo needs a
 # structural difference, list it in a "Fork deltas" comment block at the top of its copy (see
 # the README's Variants section) rather than letting it drift silently.
 #
@@ -98,8 +98,8 @@ jobs:
       # --tags`, which answers "some tag on this commit", not "the tag being published". A
       # dispatched release and an earlier pushed pre-release of the same commit leave BOTH tags on
       # it, and after UTC midnight the pre-release tag sorts first: the full release then ships a
-      # jar, and a mcmod.info inside it, stamped as a pre-release. (MCMCP shipped exactly that on
-      # 2026-09-09.)
+      # jar, and a mcmod.info inside it, stamped as a pre-release. (A release once shipped exactly
+      # that.)
       #
       # buildscript.properties' modVersion is empty, and build.gradle only asks git when it is, so
       # writing the tag into it here decides the version. `-PmodVersion` cannot do this:
@@ -136,8 +136,8 @@ jobs:
 
       # `| tail -n 1`: these values are pasted into a filename by the steps below, so any stray
       # stdout line corrupts the release. Gradle prints banners during project evaluation even
-      # under -q — the buildscript update check broke a CSM release exactly that way on
-      # 2026-07-27. gradle.properties disables that check at the source
+      # under -q — the buildscript update check once broke a release exactly that way.
+      # gradle.properties disables that check at the source
       # (systemProp.DISABLE_BUILDSCRIPT_UPDATE_CHECK = true); this is the belt-and-braces half.
       - name: Save Mod Name to GITHUB_ENV
         run: |
@@ -262,7 +262,7 @@ jobs:
       # file is on the release as an uploaded asset. It runs while the release is still a draft,
       # so a short release is never visible to anyone.
       #
-      # The action's own uploader works in parallel and loses files: CSM's releases on 2026-09-17
+      # The action's own uploader works in parallel and loses files: one mod's releases
       # came out missing a different subset of jars on each of three runs, on v2 and v3 alike.
       # A release missing a jar is worse than no release, because launcher manifests point
       # straight at these file names.

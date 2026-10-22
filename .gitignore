@@ -42,4 +42,3 @@ desktop.ini
 
 # Output of .github/scripts/server-smoke-test.sh when run locally (Minecraft mod repos).
 server-smoke.log
-server-smoke.log

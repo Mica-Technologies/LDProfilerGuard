@@ -2,16 +2,14 @@
 #
 # Boot a dedicated server via `./gradlew runServer` and assert it reaches "Done (".
 #
-# Canonical copy from dev-configurations (minecraft-mod-workflows/template/). This version is
-# for RFG / GregTechCEu-buildscript mods; the ForgeGradle 2.3 variant (which must also read
-# run/logs/latest.log) is described in that folder's README.
+# Shared Mica Technologies CI script, for RFG / GregTechCEu-buildscript mods.
 #
 # Why this exists: mod code that compiles fine can still be impossible to load on a
 # dedicated server — a client-only class referenced from common code, a client mod
 # declared as a hard dependency, a Side.CLIENT packet handler that touches Minecraft
 # directly. Forge only catches those at server startup, so `./gradlew build` is
-# perfectly happy right up until production dies. SUM shipped three such bugs at once
-# in 2026.07.19 and took the Alto server down; every one of them was reachable from a
+# perfectly happy right up until production dies. One mod once shipped three such bugs at once
+# and took a server down; every one of them was reachable from a
 # single server boot.
 #
 # `runServer` never returns on success, so we background it, tail the log for a verdict,
@@ -20,8 +18,8 @@
 # Env:
 #   SMOKE_TIMEOUT   seconds to wait for startup (default 900)
 #   SMOKE_LOG       log file path (default server-smoke.log)
-#   GRADLE_ARGS     extra arguments for the runServer line (default none), e.g. CSM's
-#                   `-PcsmRunModules=core` to boot with only its mandatory jar.
+#   GRADLE_ARGS     extra arguments for the runServer line (default none), e.g.
+#                   a project property that limits which modules boot.
 
 set -uo pipefail
 

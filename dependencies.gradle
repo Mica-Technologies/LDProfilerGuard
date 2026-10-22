@@ -38,28 +38,7 @@
  * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    // RCMC has no third-party mod dependencies. That is deliberate and worth preserving:
-    // the track geometry, physics integrator and ride-control state machines are all
-    // implemented against plain Java + Forge, so the pure-math half of the mod stays
-    // unit-testable without a game instance (see src/test/java/.../track and .../physics).
-    //
-    // Notably NOT depended on:
-    //   - UniversalModCore / Immersive Railroading. Useful prior art, and IR is the closest
-    //     thing to what RCMC does, but UMC is a whole cross-version abstraction layer whose
-    //     lifecycle we would not control. RCMC targets exactly one MC version, so the
-    //     abstraction buys nothing and costs a hard runtime dependency.
-    //   - Any client-side config/HUD framework. RCMC's operator panels are plain Forge GUIs
-    //     so a dedicated server never needs a client-only mod on its classpath. (SUM took a
-    //     dedicated server down in 2026.07 doing exactly that; see its addon.gradle.)
-    //   - DynamX, or any 6-DoF rigid-body physics engine. DynamX is CC BY-NC-ND (NonCommercial,
-    //     NoDerivatives) so its code cannot be reused at all, but the deeper reason is design:
-    //     a train on track has ONE degree of freedom, and a rigid-body solver is nondeterministic
-    //     across machines, which would cost us the client-side prediction the netcode depends on.
-    //     DynamX itself cannot reconcile — it can only snap or kick. See Appendix B of
-    //     docs/AGENT-PLANS/MASTER_PLAN.md. If cosmetic crash/ragdoll physics is ever wanted, the
-    //     dependency to add is Libbulletjme directly (zlib/BSD-3/MIT, permissive), client-side
-    //     only, never DynamX.
-    //
-    // MixinBooter is added automatically by the buildscript because usesMixins = true.
-    // JEI and TheOneProbe are on the dev classpath via includeCommonDevEnvMods.
+    // No mod dependencies besides MixinBooter, which the buildscript adds because
+    // usesMixins = true (mixinProviderSpec in buildscript.properties). It is required at
+    // runtime, not bundled.
 }

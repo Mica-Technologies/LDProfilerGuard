@@ -3,21 +3,20 @@
 # Uploads files to an existing GitHub release one at a time, then reads the release back and fails
 # unless every one of them is there.
 #
-# Canonical copy from dev-configurations (minecraft-mod-workflows/template/), folded back from
-# MCMCP, where it first replaced the action's uploads.
+# Shared Mica Technologies CI script.
 #
 # Why not softprops/action-gh-release's `files:`: its uploader runs in parallel and loses assets.
-# City Super Mod lost 2-4 of its 11 files on each of three runs on 2026-09-17 (on v2 and v3
+# A multi-jar release lost 2-4 of its 11 files on each of three runs (on v2 and v3
 # alike), with `Error creating asset temp dir` in the log and a release left short. A release
 # missing a jar is worse than no release: launcher manifests point straight at these file names.
 #
 # Each file is uploaded with `<file>#<basename>` so its label is the original file name. GitHub
-# rewrites some characters in asset names (a space becomes `.`, so `MCMCP Orchestrator_...exe` is
-# stored as `MCMCP.Orchestrator_...exe`) and shows the label instead, which is what the action set
+# rewrites some characters in asset names (a space becomes `.`, so `My Tool_...exe` is
+# stored as `My.Tool_...exe`) and shows the label instead, which is what the action set
 # too. For the same reason the check below matches a file against the asset's name OR its label.
 #
 # The check is by name, not by count: it says which file is missing, and it stays correct when
-# several jobs upload to the same release at the same time (MCMCP's orchestrator matrix does), where
+# several jobs upload to the same release at the same time (a build matrix can), where
 # a count would depend on how far the others had got.
 #
 # Usage:  upload-release-assets.sh <tag> <file>...

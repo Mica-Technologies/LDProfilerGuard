@@ -1,29 +1,28 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) when working in this repository.
 
 ## Purpose
 
-LD Profiler Guard (`ldprofilerguard`): a tiny Forge 1.12.2 mixin mod that stops the vanilla
+LD Profiler Guard (`ldprofilerguard`): a small Forge 1.12.2 mixin mod that stops the vanilla
 `Profiler` crash `ArrayIndexOutOfBoundsException: -1` in `Profiler.endSection`, hit while profiling
 is on when a mod calls `endSection` without a matching `startSection`, or when another thread
-touches the profiler. Server and client; `acceptableRemoteVersions = "*"`.
+touches the profiler. Server and client; `acceptableRemoteVersions = "*"`. See README.md.
 
 ## Commands
 
+Gradle needs a JDK 17+ (set `JAVA_HOME` if `java` is not on `PATH`).
+
 ```sh
-# Build (no java on PATH; set JAVA_HOME explicitly)
-JAVA_HOME="$HOME/.jdks/azul-17.0.19" ./gradlew build
-
-# Run all tests
-JAVA_HOME="$HOME/.jdks/azul-17.0.19" ./gradlew test
-
-# Run a single test
-JAVA_HOME="$HOME/.jdks/azul-17.0.19" ./gradlew test --tests '*ProfilerGuardTest.foreignThreadCallsAreIgnored'
-
-# Run / launch locally (log goes to run/logs/latest.log)
-JAVA_HOME="$HOME/.jdks/azul-17.0.19" ./gradlew runServer
+./gradlew build                     # compile, unit tests, jar in build/libs
+./gradlew test                      # unit tests
+./gradlew test --tests '*ProfilerGuardTest.foreignThreadCallsAreIgnored'
+./gradlew runClient                 # dev client; log in run/logs/latest.log
+./gradlew runServer                 # dev server; log in run/logs/latest.log
 ```
+
+Do not run `build`/`test` while a `runClient`/`runServer` is live: it swaps the classpath under
+the running game.
 
 ## Architecture
 
@@ -34,14 +33,20 @@ JAVA_HOME="$HOME/.jdks/azul-17.0.19" ./gradlew runServer
   whichever thread opens the `"root"` section (server thread / client thread).
 - `mixin/ProfilerGuardCoreMod`: FML coremod + MixinBooter `IEarlyMixinLoader` that registers
   `mixins.ldprofilerguard.json`. `-Dldprofilerguard.disable=true` skips it (vanilla behaviour).
-- `CommandProfilerGuard`: `/ldprofilerguard underflow|foreign` reproduces the misuse after
-  `/debug start`.
+- `CommandProfilerGuard`: `/ldprofilerguard underflow|foreign` (ops) reproduces the misuse on the
+  server profiler after `/debug start`.
+- `ClientCommandProfilerGuard`: `/ldprofilerguardclient underflow|foreign`, the same on the
+  client profiler (F3 + Shift chart on). Registered only on the client.
 
-## Conventions & gotchas
+## Conventions and gotchas
 
-- GregTechCEu buildscript (RFG), copied from RCMC. Do not edit `build.gradle`; settings go in
-  `buildscript.properties`, extras in `addon.gradle`. `modVersion =` stays empty: the release
-  workflow pins it from the tag (local builds take it from `git describe`).
-- MixinBooter (10.7 in the pack) is a dependency, not bundled.
-- Verify with the `mod-verify` ritual: grep `run/logs/latest.log` for
-  `Adding [mixins.ldprofilerguard.json]` and mixin errors.
+- GregTechCEu buildscript (RFG). Do not edit `build.gradle` beyond the marked local change;
+  settings go in `buildscript.properties`, extras in `addon.gradle`. `modVersion =` stays empty:
+  the release workflow pins it from the tag (local builds take it from `git describe`).
+- MixinBooter is a runtime dependency, not bundled.
+- After a change, check `run/logs/latest.log` for `Adding [mixins.ldprofilerguard.json]` (proves
+  MixinBooter loaded the config) and for mixin errors. A wrong injection descriptor disables the
+  whole mixin class without failing the build.
+- `runObfClient` cannot start this mod: it puts the mod on the classpath as a command-line
+  coremod, which loads before MixinBooter from `mods/`. Test packaged jars in a real launcher.
+- Workflows in `.github/` are shared across Mica Technologies mods; change only `# ADAPT:` lines.

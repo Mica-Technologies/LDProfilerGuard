@@ -2,6 +2,8 @@ package com.micatechnologies.minecraft.ldprofilerguard;
 
 import com.micatechnologies.minecraft.ldprofilerguard.core.GuardLog;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,13 @@ public class LDProfilerGuard {
             LOGGER.warn(message);
         }
     }, System::nanoTime, GuardLog.DEFAULT_INTERVAL_NANOS);
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        if (FMLCommonHandler.instance().getSide().isClient()) {
+            ClientCommandProfilerGuard.register();
+        }
+    }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {

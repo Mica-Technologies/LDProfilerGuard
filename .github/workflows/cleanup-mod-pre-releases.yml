@@ -1,5 +1,4 @@
-# Mica Technologies standard pre-release cleanup — canonical copy from dev-configurations
-# (minecraft-mod-workflows/template/). Nothing here is expected to change per repo.
+# Mica Technologies standard pre-release cleanup. Nothing here is expected to change per repo.
 #
 # The workflow_run trigger matches the release workflow by its `name:`. Rename that workflow and
 # this one silently stops running.
